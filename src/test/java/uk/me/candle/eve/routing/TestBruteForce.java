@@ -7,6 +7,7 @@ import uk.me.candle.eve.graph.Edge;
 import uk.me.candle.eve.graph.Graph;
 import uk.me.candle.eve.graph.Node;
 import static junit.framework.Assert.*;
+import uk.me.candle.eve.graph.distances.Jumps;
 
 /**
  *
@@ -87,7 +88,7 @@ public class TestBruteForce extends BruteForce {
 
     @Test
     public void testExecute1() {
-        Graph g = new Graph();
+        Graph g = new Graph(new Jumps());
         Node a = new Node("a");
         Node b = new Node("b");
         List<Node> waypoints = Arrays.asList(a, b);
@@ -102,7 +103,7 @@ public class TestBruteForce extends BruteForce {
 
     @Test
     public void testExecute2() {
-        Graph gr = new Graph();
+        Graph gr = new Graph(new Jumps());
         Node a = new Node("a");
         Node b = new Node("b");
         Node c = new Node("c");
@@ -128,14 +129,5 @@ public class TestBruteForce extends BruteForce {
             assertEquals("index: " + i, expected[i], route.get(i));
         }
         assertEquals(8, getLastDistance());
-    }
-
-    class EmptyProgress implements Progress {
-        @Override public int getMaximum() {return 0; }
-        @Override public void setMaximum(int maximum) { }
-        @Override public int getMinimum() {return 0; }
-        @Override public void setMinimum(int minimum) { }
-        @Override public int getValue() { return 0; }
-        @Override public void setValue(int value) { }
     }
 }

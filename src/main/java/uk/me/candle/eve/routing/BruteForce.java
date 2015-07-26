@@ -12,16 +12,17 @@ import uk.me.candle.eve.graph.Node;
  * @author Candle
  */
 public class BruteForce extends RoutingAlgorithm {
+	private final boolean loop;
     long lastTime = -1;
     int lastDistance = -1;
     short[][] distances;
 
-    public BruteForce() {
+	public BruteForce() {
+		this(true);
+	}
+
+    public BruteForce(boolean loop) {
         super("Brute Force"
-            , "Brute Force:\n" +
-            "Speed: Slow (but, please give it a try)\n" +
-            "Optimal Route: Always\n" +
-            "Max Systems: 13.\n"
             , "This algorithm is the only" +
             " way to get the optimal solution, however," +
             " it is also by far the slowest, with small datasets (20 waypoints or so)" +
@@ -32,6 +33,7 @@ public class BruteForce extends RoutingAlgorithm {
             " which allows us to ignore one of the waypoints, hence the 12" +
             " and not 13." +
             "");
+		this.loop = loop;
     }
 
     @Override
@@ -57,6 +59,8 @@ public class BruteForce extends RoutingAlgorithm {
     @Override
     public List<Node> execute(Progress progress, Graph g, List<? extends Node> waypoints) {
         long startTime = System.currentTimeMillis();
+		lastTime = -1;
+		lastDistance = -1;
         if (waypoints.size() < 2) throw new IllegalArgumentException("The size of the list of waypoints must be greater or equal to two; it's current size is " + waypoints.size());
         int max = factorial(waypoints.size()-1);
         progress.setMaximum((waypoints.size() * waypoints.size()) + max + waypoints.size());
@@ -118,6 +122,18 @@ public class BruteForce extends RoutingAlgorithm {
       return changeOrdering(ordering, initial, required, 0, ordering.length);
     }
 
+	protected int getTotalFor(int[] ordering, short[][] distances) {
+        int distance = 0;
+        for (int i = 1; i < ordering.length; ++i) {
+            distance += distances[ordering[i-1]][ordering[i]];
+        }
+		//TODO - Loop logic
+		if (loop) {
+			distance += distances[ordering[ordering.length-1]][ordering[0]];
+		}
+        return distance;
+    }
+
     /**
      * see http://projecteuler.net/index.php?section=problems&id=24 for this algorithm.
      * @param ordering the array in which to put the new ordering (performance - object creation). This array needs to me the same length as the <pre>initial</pre> parameter.
@@ -160,4 +176,21 @@ public class BruteForce extends RoutingAlgorithm {
         }
         return ordering;
     }
+
+	@Override
+	protected String getSpeed() {
+		return "Slowest";
+	}
+
+	@Override
+	protected String getRoute() {
+		return "Always optimal route";
+	}
+
+	@Override
+	protected String getProgress() {
+		return "Linear";
+	}
+
+	
 }

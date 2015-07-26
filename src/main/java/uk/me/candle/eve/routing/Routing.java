@@ -6,6 +6,7 @@ import java.util.Random;
 import uk.me.candle.eve.graph.Edge;
 import uk.me.candle.eve.graph.Graph;
 import uk.me.candle.eve.graph.Node;
+import uk.me.candle.eve.graph.distances.Jumps;
 
 /**
  *
@@ -17,7 +18,6 @@ public class Routing {
     public static void main(String[] args) {
         Routing r = new Routing();
         r.createGraph2();
-        System.out.println(r.graph.toDot());
 
         List<Node> assetNodes = r.getAssetNodes();
 
@@ -50,7 +50,7 @@ public class Routing {
 
 
     public Graph createGraph2() {
-        graph = new Graph();
+        graph = new Graph(new Jumps());
 
         List<Node> currentNodes = new ArrayList<Node>();
         {
@@ -79,7 +79,7 @@ public class Routing {
     }
 
     public Graph createGraph() {
-        graph = new Graph();
+        graph = new Graph(new Jumps());
 
         Node[] nodes = new Node[20];
         for (int i = 0; i < nodes.length; ++i) {
