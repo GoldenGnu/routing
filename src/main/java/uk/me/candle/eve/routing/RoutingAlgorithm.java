@@ -23,7 +23,8 @@ package uk.me.candle.eve.routing;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import uk.me.candle.eve.graph.Graph;
 import uk.me.candle.eve.graph.Node;
 import uk.me.candle.eve.routing.cancel.CancelService;
@@ -34,7 +35,7 @@ import uk.me.candle.eve.routing.cancel.DefaultCancelService;
  * @author Candle
  */
 public abstract class RoutingAlgorithm {
-    private static final Logger logger = Logger.getLogger(RoutingAlgorithm.class);
+    private static final Logger LOG = LoggerFactory.getLogger(RoutingAlgorithm.class);
 	private static List<Class<? extends RoutingAlgorithm>> registered = new ArrayList<Class<? extends RoutingAlgorithm>>();
 	/*
     private static SortedSet<Class<? extends RoutingAlgorithm>> registered = new TreeSet<Class<? extends RoutingAlgorithm>>(new Comparator<Class<? extends RoutingAlgorithm>>() {
@@ -189,9 +190,9 @@ public abstract class RoutingAlgorithm {
             try {
                 list.add(clz.newInstance());
             } catch (InstantiationException ex) {
-                logger.error("failed to create: " + clz.getName(), ex);
+                LOG.error("failed to create: " + clz.getName(), ex);
             } catch (IllegalAccessException ex) {
-                logger.error("failed to create: " + clz.getName(), ex);
+                LOG.error("failed to create: " + clz.getName(), ex);
             }
         }
         return list;
