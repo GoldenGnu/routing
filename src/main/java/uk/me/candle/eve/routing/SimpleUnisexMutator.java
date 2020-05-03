@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -26,30 +26,26 @@ import uk.me.candle.eve.graph.Node;
 import uk.me.candle.eve.routing.engines.simpleUnisexMutator.SimpleUnisexMutatorEngine;
 
 
-public class SimpleUnisexMutator extends AbstractEngine {
+public class SimpleUnisexMutator<T extends Node> extends AbstractEngine<T> {
 
-	public SimpleUnisexMutator() {
-		this(true);
-	}
+    public SimpleUnisexMutator() {
+        super("SimpleUnisexMutator", "SimpleUnisexMutator");
+    }
 
-	public SimpleUnisexMutator(boolean loop) {
-		super("SimpleUnisexMutator", "SimpleUnisexMutator", loop);
-	}
+    @Override
+    public List<T> execute(Progress progress, Graph<T> g, List<T> assetLocations) {
+        return super.execute(progress, g, assetLocations, new SimpleUnisexMutatorEngine<>());
+    }
 
-	@Override
-	public List<Node> execute(Progress progress, Graph g, List<? extends Node> assetLocations) {
-		return super.execute(progress, g, assetLocations, new SimpleUnisexMutatorEngine());
-	}
+    @Override
+    protected String getSpeed() {
+        return "Fast";
+    }
 
-	@Override
-	protected String getSpeed() {
-		return "Fast";
-	}
+    @Override
+    protected String getRoute() {
+        return "Worst";
+    }
 
-	@Override
-	protected String getRoute() {
-		return "Worst";
-	}
-
-	
+    
 }

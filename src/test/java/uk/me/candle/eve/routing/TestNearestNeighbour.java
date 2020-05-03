@@ -17,10 +17,11 @@ import uk.me.candle.eve.graph.distances.Jumps;
  *
  * @author Niklas
  */
-public class TestNearestNeighbour extends NearestNeighbour{
-		@Test
+public class TestNearestNeighbour extends NearestNeighbour<Node> {
+
+    @Test
     public void testExecute() {
-        Graph gr = new Graph(new Jumps());
+        Graph<Node> gr = new Graph<>(new Jumps<>());
         Node a = new NodeString("a");
         Node b = new NodeString("b");
         Node c = new NodeString("c");
@@ -45,18 +46,18 @@ public class TestNearestNeighbour extends NearestNeighbour{
         for (int i = 0; i < route.size(); ++i) {
             assertEquals("index: " + i, expected[i], route.get(i));
         }
-		assertEquals(8, getLastDistance());
-		
-		for (int i = 0; i < route.size(); i++) {
-			Node last = route.get(route.size() - 1); //Last index
-			int total = 0;
-			for (Node node : route) {
-				int distanceBetween = gr.distanceBetween(last, node);
-				total = total + distanceBetween;
-				last = node;
-			}
-			assertEquals(8, total);
-			firstToLast(route);
-		}
+        assertEquals(8, getLastDistance());
+        
+        for (int i = 0; i < route.size(); i++) {
+            Node last = route.get(route.size() - 1); //Last index
+            int total = 0;
+            for (Node node : route) {
+                int distanceBetween = gr.distanceBetween(last, node);
+                total = total + distanceBetween;
+                last = node;
+            }
+            assertEquals(8, total);
+            firstToLast(route);
+        }
     }
 }

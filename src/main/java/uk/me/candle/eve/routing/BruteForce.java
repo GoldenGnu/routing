@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -30,18 +30,14 @@ import uk.me.candle.eve.graph.Node;
 /**
  *
  * @author Candle
+ * @param <T>
  */
-public class BruteForce extends RoutingAlgorithm {
-	private final boolean loop;
-    long lastTime = -1;
-    int lastDistance = -1;
-    short[][] distances;
+public class BruteForce<T extends Node> extends RoutingAlgorithm<T> {
+    private long lastTime = -1;
+    private int lastDistance = -1;
+    private short[][] distances;
 
-	public BruteForce() {
-		this(true);
-	}
-
-    public BruteForce(boolean loop) {
+    public BruteForce() {
         super("Brute Force"
             , "This algorithm is the only" +
             " way to get the optimal solution, however," +
@@ -53,7 +49,6 @@ public class BruteForce extends RoutingAlgorithm {
             " which allows us to ignore one of the waypoints, hence the 12" +
             " and not 13." +
             "");
-		this.loop = loop;
     }
 
     @Override
@@ -77,10 +72,10 @@ public class BruteForce extends RoutingAlgorithm {
     }
 
     @Override
-    public List<Node> execute(Progress progress, Graph g, List<? extends Node> waypoints) {
+    public List<T> execute(Progress progress, Graph<T> g, List<T> waypoints) {
         long startTime = System.currentTimeMillis();
-		lastTime = -1;
-		lastDistance = -1;
+        lastTime = -1;
+        lastDistance = -1;
         if (waypoints.size() < 2) throw new IllegalArgumentException("The size of the list of waypoints must be greater or equal to two; it's current size is " + waypoints.size());
         int max = factorial(waypoints.size()-1);
         progress.setMaximum((waypoints.size() * waypoints.size()) + max + waypoints.size());
@@ -105,16 +100,13 @@ public class BruteForce extends RoutingAlgorithm {
             changeOrdering(ordering, initialOrdering, i, 1, ordering.length-1);
             distance = getTotalFor(ordering, distances);
             if (distance < bestTotal) {
-                for (int o  = 0; o < ordering.length; ++o) {
-                    bestOrdering[o] = ordering[o];
-                }
+                bestOrdering = ordering.clone();
                 bestTotal = distance;
             }
             progress.setValue(progress.getValue()+1);
         }
 
-
-        List<Node> finalOrdering = new ArrayList<Node>();
+        List<T> finalOrdering = new ArrayList<>();
         for (int i = 0; i < bestOrdering.length; ++i) {
             finalOrdering.add(waypoints.get(bestOrdering[i]));
             progress.setValue(progress.getValue()+1);
@@ -137,20 +129,21 @@ public class BruteForce extends RoutingAlgorithm {
      * @param ordering this array is mutated.
      * @param initial
      * @param required
+     * @return 
      */
     protected int[] changeOrdering(int[] ordering, int[] initial, int required) {
       return changeOrdering(ordering, initial, required, 0, ordering.length);
     }
 
-	protected int getTotalFor(int[] ordering, short[][] distances) {
+    protected int getTotalFor(int[] ordering, short[][] distances) {
         int distance = 0;
         for (int i = 1; i < ordering.length; ++i) {
             distance += distances[ordering[i-1]][ordering[i]];
         }
-		//TODO - Loop logic
-		if (loop) {
-			distance += distances[ordering[ordering.length-1]][ordering[0]];
-		}
+        //TODO - Loop logic
+        if (loop) {
+            distance += distances[ordering[ordering.length-1]][ordering[0]];
+        }
         return distance;
     }
 
@@ -171,8 +164,8 @@ public class BruteForce extends RoutingAlgorithm {
         long req = required;
 
         // define two lists, one that collects the result and one tha contains the remaining elements.
-        List<Integer> elements = new LinkedList<Integer>(); // remove *should* be quicker with a linked list
-        List<Integer> result = new LinkedList<Integer>(); // additions to the end of the list *should* be quicker, removals from the start of the lost *should* be quicker
+        List<Integer> elements = new LinkedList<>(); // remove *should* be quicker with a linked list
+        List<Integer> result = new LinkedList<>(); // additions to the end of the list *should* be quicker, removals from the start of the lost *should* be quicker
         for (int i = offset; i < offset+length; ++i) {
             elements.add(initial[i]);
         }
@@ -197,20 +190,19 @@ public class BruteForce extends RoutingAlgorithm {
         return ordering;
     }
 
-	@Override
-	protected String getSpeed() {
-		return "Slowest";
-	}
+    @Override
+    protected String getSpeed() {
+        return "Slowest";
+    }
 
-	@Override
-	protected String getRoute() {
-		return "Always optimal route";
-	}
+    @Override
+    protected String getRoute() {
+        return "Always optimal route";
+    }
 
-	@Override
-	protected String getProgress() {
-		return "Linear";
-	}
+    @Override
+    protected String getProgress() {
+        return "Linear";
+    }
 
-	
 }

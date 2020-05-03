@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -26,30 +26,26 @@ import uk.me.candle.eve.graph.Node;
 import uk.me.candle.eve.routing.engines.crossoverHibrid2opt.GreedyCrossoverHibrid2OptEngine;
 
 
-public class CrossoverHibrid2opt extends AbstractEngine {
+public class CrossoverHibrid2opt<T extends Node> extends AbstractEngine<T> {
 
-	public CrossoverHibrid2opt() {
-		this(true);
-	}
+    public CrossoverHibrid2opt() {
+        super("GA: Crossover & 2-opt",
+            "Genetic algorithm: Crossover\n"
+            + "Iterative improvement: Pairwise exchange (2-opt)");
+    }
 
-	public CrossoverHibrid2opt(boolean loop) {
-		super("GA: Crossover & 2-opt",
-			"Genetic algorithm: Crossover\n"
-			+ "Iterative improvement: Pairwise exchange (2-opt)", loop);
-	}
+    @Override
+    public List<T> execute(Progress progress, Graph<T> g, List<T> assetLocations) {
+        return super.execute(progress, g, assetLocations, new GreedyCrossoverHibrid2OptEngine<>());
+    }
 
-	@Override
-	public List<Node> execute(Progress progress, Graph g, List<? extends Node> assetLocations) {
-		return super.execute(progress, g, assetLocations, new GreedyCrossoverHibrid2OptEngine());
-	}
+    @Override
+    protected String getSpeed() {
+        return "Very Slow";
+    }
 
-	@Override
-	protected String getSpeed() {
-		return "Very Slow";
-	}
-
-	@Override
-	protected String getRoute() {
-		return "Good";
-	}
+    @Override
+    protected String getRoute() {
+        return "Good";
+    }
 }

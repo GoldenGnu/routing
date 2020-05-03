@@ -46,40 +46,35 @@ import uk.me.candle.eve.routing.engines.simpleUnisexMutator.SimpleUnisexMutatorE
  *
  * For heuristics, the 2opt mutation is used, as described at
  * http://www.gcd.org/sengoku/docs/arob98.pdf
+ * @param <T>
  *
  * @see #getChild(TSPChromosome)
  * @see org.saiko.ai.genetics.tsp.engines.crossover.GreedyCrossoverEngine
  * @see org.saiko.ai.genetics.tsp.TSPEngine
  * @see org.saiko.ai.genetics.tsp.engines.crossover.GreedyCrossoverEngine
  */
-public class SimpleUnisexMutatorHibrid2OptEngine extends SimpleUnisexMutatorEngine {
+public class SimpleUnisexMutatorHibrid2OptEngine<T extends Node> extends SimpleUnisexMutatorEngine<T> {
 
-	/**
-	 * String containing the CVS revision. *
-	 */
-	@SuppressWarnings("hiding")
-	public final static String CVS_REVISION = "$Revision: 1.2 $";
+    /**
+     * Creates new randomly mutated chromosome from its parent. This is the most
+     * simple unisex genetic mutation algorithm, but this algorithm is combined
+     * with 2opt heuristics
+     *
+     * @param parent
+     */
+    @Override
+    protected void getChild(TSPChromosome<T> parent) {
 
-	/**
-	 * Creates new randomly mutated chromosome from its parent. This is the most
-	 * simple unisex genetic mutation algorithm, but this algorithm is combined
-	 * with 2opt heuristics
-	 *
-	 * @param parent
-	 */
-	@Override
-	protected void getChild(TSPChromosome parent) {
+        //clone the cities to new array
+        T child1[] = parent.getCities().clone();
 
-		//clone the cities to new array
-		Node child1[] = parent.getCities().clone();
+        //aply random swaping to cities
+        mutate(child1);
 
-		//aply random swaping to cities
-		mutate(child1);
-
-		//addon
-		GreedyCrossoverHibrid2OptEngine.heuristics2opt(child1);
-
-		//add new chromosome to population
-		population.add(new TSPChromosome(child1, loop));
-	}
+        //addon
+        GreedyCrossoverHibrid2OptEngine.heuristics2opt(child1);
+        
+        //add new chromosome to population
+        population.add(new TSPChromosome<>(child1, loop));
+    }
 }

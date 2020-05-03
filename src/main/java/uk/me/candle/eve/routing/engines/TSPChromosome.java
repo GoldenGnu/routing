@@ -31,114 +31,92 @@ import uk.me.candle.eve.graph.Node;
  *
  * TSPChromosome of the traveling salesman problem. The chromosome represents
  * ordered array of cities and have some functions over this array.
+ * @param <T>
  */
-public class TSPChromosome {
+public class TSPChromosome<T extends Node> {
 
-	/**
-	 * String containing the CVS revision. *
-	 */
-	public final static String CVS_REVISION = "$Revision: 1.3 $";
-	/**
-	 * ordered array of cities
-	 */
-	protected Node[] cities;
-	/**
-	 * distance of this chromosome - the length of all the way through all the
-	 * cities and back to the first one. if the coordinates of cities are in
-	 * S-JTSK, then this length is in meters Can be used as genetic evaluation
-	 * criteria.
-	 */
-	protected double totalDistance;
-	/**
-	 * total cost of this chroosome. can contain more criteria than the distance
-	 * itself (e.g. maxDistance of cities ...)
-	 */
-	protected double totalCost;
-	/**
-	 * Return to start city at the end
-	 */
-	protected boolean loop;
+    /**
+     * ordered array of cities
+     */
+    protected T[] cities;
+    /**
+     * distance of this chromosome - the length of all the way through all the
+     * cities and back to the first one. if the coordinates of cities are in
+     * S-JTSK, then this length is in meters Can be used as genetic evaluation
+     * criteria.
+     */
+    protected double totalDistance;
+    /**
+     * total cost of this chroosome. can contain more criteria than the distance
+     * itself (e.g. maxDistance of cities ...)
+     */
+    protected double totalCost;
+    /**
+     * Return to start city at the end
+     */
+    protected final boolean loop;
 
-	/**
-	 * Creates the chromosome from the list of cities
-	 *
-	 * @param cities
-	 * @param computeCosts - do we want to compute costs immediatelly ?
-	 */
-	public TSPChromosome(Node[] cities, boolean computeCosts, boolean loop) {
+    /**
+     * Creates the chromosome from the list of cities
+     *
+     * @param cities
+     * @param type
+     */
+    public TSPChromosome(T[] cities, boolean loop) {
+        this.cities = cities.clone();
+        this.loop = loop;
+        // compute the current costs
+        computeCost();
+    }
 
-		this.cities = cities.clone();
-		this.loop = loop;
-		if (computeCosts) {
-			// compute the current costs
-			computeCost();
-		}
-	}
+    /**
+     * Compute the total distance and cost of this chromosome - Distance is the
+     * length of all the way through all the cities and back to the first one.
+     * if the coordinates of cities are in S-JTSK, then this length is in
+     * meters. The costs could be different from distance in that way, that it
+     * can contain more criteria than the distance itself
+     */
+    public final void computeCost() {
+        //compute the distance to travel through all the cities
+        totalDistance = 0;
+        totalCost = 0;
+       
+        //go through cities and compute costs
+        for (int i = 0; i < cities.length - 1; i++) {
+            totalDistance += Manager.distance(cities[i], cities[i + 1]);
+            totalCost += Manager.cost(cities[i], cities[i + 1]);
+        }
+        
+        //add the cost from last city back to home
+        if (loop) {
+            totalDistance += Manager.distance(cities[cities.length - 1], cities[0]);
+            totalCost += Manager.cost(cities[cities.length - 1], cities[0]);
+        }
+    }
 
-	/**
-	 * Creates the chromosome from the list of cities
-	 *
-	 * @param cities
-	 */
-	public TSPChromosome(Node[] cities, boolean loop) {
-		this(cities, true, loop);
-	}
+    /**
+     * @return the distance of this chromosome - the length of all the way
+     * through all the cities and back to the first one. if the coordinates of
+     * cities are in S-JTSK, then this length is in meters
+     */
+    public double getTotalDistance() {
+        return totalDistance;
+    }
 
-	/**
-	 * Compute the total distance and cost of this chromosome - Distance is the
-	 * length of all the way through all the cities and back to the first one.
-	 * if the coordinates of cities are in S-JTSK, then this length is in
-	 * meters. The costs could be different from distance in that way, that it
-	 * can contain more criteria than the distance itself
-	 */
-	public void computeCost() {
-		//compute the distance to travel through all the cities
-		totalDistance = 0;
-		totalCost = 0;
+    /**
+     * get total cost of this chroosome. can contain more criteria than the
+     * distance itself (e.g. maxDistance of cities ...)
+     *
+     * @return totalCost
+     */
+    public double getTotalCost() {
+        return totalCost;
+    }
 
-		double currentDistance = 0;
-		double currentCost = 0;
-
-		//go through cities and compute costs
-		for (int i = 0; i < cities.length - 1; i++) {
-			currentDistance = Manager.distance(cities[i], cities[i + 1]);
-			currentCost = Manager.cost(cities[i], cities[i + 1]);
-			totalDistance += currentDistance;
-			totalCost += currentCost;
-		}
-
-		//add the cost from last city back to home
-		if (loop) {
-			currentDistance = Manager.distance(cities[cities.length - 1], cities[0]);
-			currentCost = Manager.distance(cities[cities.length - 1], cities[0]);
-			totalDistance += currentDistance;
-			totalCost += currentCost;
-		}
-	}
-
-	/**
-	 * @return the distance of this chromosome - the length of all the way
-	 * through all the cities and back to the first one. if the coordinates of
-	 * cities are in S-JTSK, then this length is in meters
-	 */
-	public double getTotalDistance() {
-		return totalDistance;
-	}
-
-	/**
-	 * get total cost of this chroosome. can contain more criteria than the
-	 * distance itself (e.g. maxDistance of cities ...)
-	 *
-	 * @return totalCost
-	 */
-	public double getTotalCost() {
-		return totalCost;
-	}
-
-	/**
-	 * @return the ordered array of cities of this chromosome
-	 */
-	public Node[] getCities() {
-		return cities;
-	}
+    /**
+     * @return the ordered array of cities of this chromosome
+     */
+    public T[] getCities() {
+        return cities;
+    }
 }

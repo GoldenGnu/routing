@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -26,35 +26,31 @@ import uk.me.candle.eve.graph.Node;
 import uk.me.candle.eve.routing.engines.simpleUnisexMutatorHibrid2Opt.SimpleUnisexMutatorHibrid2OptEngine;
 
 
-public class SimpleUnisexMutatorHibrid2Opt extends AbstractEngine {
+public class SimpleUnisexMutatorHibrid2Opt<T extends Node> extends AbstractEngine<T> {
 
-	public SimpleUnisexMutatorHibrid2Opt() {
-		this(true);
-	}
+    public SimpleUnisexMutatorHibrid2Opt() {
+        super("Mutation 2-opt",
+            "Genetic Algorithm: Mutation\n" +
+            "The pairwise exchange or 2-opt technique involves iteratively removing two edges and replacing these with two different edges that reconnect the fragments created by edge removal into a new and shorter tour.");
+    }
 
-	public SimpleUnisexMutatorHibrid2Opt(boolean loop) {
-		super("Mutation 2-opt",
-			"Genetic Algorithm: Mutation\n" +
-			"The pairwise exchange or 2-opt technique involves iteratively removing two edges and replacing these with two different edges that reconnect the fragments created by edge removal into a new and shorter tour.", loop);
-	}
+    @Override
+    public int getWaypointLimit() {
+        return 800;
+    }
 
-	@Override
-	public int getWaypointLimit() {
-		return 800;
-	}
+    @Override
+    public List<T> execute(Progress progress, Graph<T> g, List<T> assetLocations) {
+        return super.execute(progress, g, assetLocations, new SimpleUnisexMutatorHibrid2OptEngine<>());
+    }
 
-	@Override
-	public List<Node> execute(Progress progress, Graph g, List<? extends Node> assetLocations) {
-		return super.execute(progress, g, assetLocations, new SimpleUnisexMutatorHibrid2OptEngine());
-	}
+    @Override
+    protected String getSpeed() {
+        return "Slow";
+    }
 
-	@Override
-	protected String getSpeed() {
-		return "Slow";
-	}
-
-	@Override
-	protected String getRoute() {
-		return "Good";
-	}
+    @Override
+    protected String getRoute() {
+        return "Good";
+    }
 }

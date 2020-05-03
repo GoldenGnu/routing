@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -56,21 +56,21 @@ public class Routing {
         System.out.println();
     }
 
-    Graph graph;
+    Graph<Node> graph;
 
     public List<Node> getAssetNodes() {
-        List<Node> nodes = new ArrayList<Node>();
+        List<Node> nodes = new ArrayList<>();
         for (int i = 0; i < 5; ++i) {
-            nodes.add(new ArrayList<Node>(graph.getNodes()).get(rand.nextInt(graph.getNodes().size())));
+            nodes.add(new ArrayList<>(graph.getNodes()).get(rand.nextInt(graph.getNodes().size())));
         }
         return nodes;
     }
 
 
-    public Graph createGraph2() {
-        graph = new Graph(new Jumps());
+    public Graph<Node> createGraph2() {
+        graph = new Graph<>(new Jumps<>());
 
-        List<Node> currentNodes = new ArrayList<Node>();
+        List<Node> currentNodes = new ArrayList<>();
         {
             Node first = new Node("node " + 0);
             currentNodes.add(first);
@@ -97,7 +97,7 @@ public class Routing {
     }
 
     public Graph createGraph() {
-        graph = new Graph(new Jumps());
+        graph = new Graph<>(new Jumps<>());
 
         Node[] nodes = new Node[20];
         for (int i = 0; i < nodes.length; ++i) {

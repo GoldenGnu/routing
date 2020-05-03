@@ -8,13 +8,13 @@ import uk.me.candle.eve.graph.Node;
  */
 public class NodeString extends Node {
 
-	public NodeString(String name) {
-		super(name);
-	}
+    public NodeString(String name) {
+        super(name);
+    }
 
-	@Override
-	public String toString() {
-		return getName();
-	}
-	
+    @Override
+    public String toString() {
+        return getName();
+    }
+    
 }

@@ -29,21 +29,18 @@ import uk.me.candle.eve.graph.Node;
  * Last change $Date: 2005/08/23 23:18:04 $
  *
  * Interface definition for Traveling salesman genetic engine
+ * @param <T>
  */
-public interface TSPEngine {
-   
-   /** String containing the CVS revision. **/
-   public final static String CVS_REVISION = "$Revision: 1.2 $";
+public interface TSPEngine<T extends Node> {
 
-   
    /**
-    * Initialize engine for given population size and list of cities.
-    * Can be calledseveral times to reinitialize engine.
+    * Initialize engine for given population size and list of cities.Can be calledseveral times to reinitialize engine.
     * @param appConfiguration
     * @param cities
+     * @param loop
     * @see TSPConfiguration
     */
-   public void initialize(TSPConfiguration appConfiguration, Node cities[], boolean loop);
+   public void initialize(TSPConfiguration appConfiguration, T cities[], boolean loop);
    
    
    /**
@@ -54,7 +51,7 @@ public interface TSPEngine {
    /**
     * @return the best chromosome from the population
     */
-   public TSPChromosome getBestChromosome();
+   public TSPChromosome<T> getBestChromosome();
    
    /**
     * Make new generation of population.

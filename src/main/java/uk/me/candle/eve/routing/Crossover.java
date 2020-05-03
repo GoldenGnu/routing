@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016, Niklas Kyster Rasmussen, Flaming Candle
+ * Copyright 2015-2020, Niklas Kyster Rasmussen, Flaming Candle
  *
  * This file is part of Routing
  *
@@ -26,33 +26,29 @@ import uk.me.candle.eve.graph.Node;
 import uk.me.candle.eve.routing.engines.crossover.GreedyCrossoverEngine;
 
 
-public class Crossover extends AbstractEngine{
+public class Crossover<T extends Node> extends AbstractEngine<T> {
 
-	public Crossover() {
-		this(true);
-	}
+    public Crossover() {
+        super("Crossover", "Genetic Algorithm: Crossover");
+    }
 
-	public Crossover(boolean loop) {
-		super("Crossover", "Genetic Algorithm: Crossover", loop);
-	}
+    @Override
+    public List<T> execute(Progress progress, Graph<T> g, List<T> assetLocations) {
+        return super.execute(progress, g, assetLocations, new GreedyCrossoverEngine<>());
+    }
 
-	@Override
-	public List<Node> execute(Progress progress, Graph g, List<? extends Node> assetLocations) {
-		return super.execute(progress, g, assetLocations, new GreedyCrossoverEngine());
-	}
+    @Override
+    public int getWaypointLimit() {
+        return 800;
+    }
 
-	@Override
-	public int getWaypointLimit() {
-		return 800;
-	}
+    @Override
+    protected String getSpeed() {
+        return "Fast";
+    }
 
-	@Override
-	protected String getSpeed() {
-		return "Fast";
-	}
-
-	@Override
-	protected String getRoute() {
-		return "Average";
-	}
+    @Override
+    protected String getRoute() {
+        return "Average";
+    }
 }

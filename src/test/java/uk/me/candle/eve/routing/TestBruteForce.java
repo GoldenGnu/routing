@@ -13,7 +13,7 @@ import uk.me.candle.eve.graph.distances.Jumps;
  *
  * @author Candle
  */
-public class TestBruteForce extends BruteForce {
+public class TestBruteForce extends BruteForce<Node> {
 
     @Test
     public void testFactorial() {
@@ -88,12 +88,12 @@ public class TestBruteForce extends BruteForce {
 
     @Test
     public void testExecute1() {
-        Graph g = new Graph(new Jumps());
+        Graph<Node> g = new Graph<>(new Jumps<>());
         Node a = new Node("a");
         Node b = new Node("b");
         List<Node> waypoints = Arrays.asList(a, b);
-        g.addEdge(new Edge(a, b));
-        g.addEdge(new Edge(b, a));
+        g.addEdge(new Edge<>(a, b));
+        g.addEdge(new Edge<>(b, a));
         List<Node> route = execute(new EmptyProgress(), g, waypoints);
         Node[] expected = new Node[]{a, b};
         for (int i = 0; i < expected.length; ++i) {
@@ -103,7 +103,7 @@ public class TestBruteForce extends BruteForce {
 
     @Test
     public void testExecute2() {
-        Graph gr = new Graph(new Jumps());
+        Graph<Node> gr = new Graph<>(new Jumps<>());
         Node a = new Node("a");
         Node b = new Node("b");
         Node c = new Node("c");
